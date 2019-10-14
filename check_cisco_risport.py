@@ -59,18 +59,18 @@ def get_risport(username,password,hostname,devicename):
 	history = HistoryPlugin()
 	client = Client(wsdl=wsdl, transport=transport, plugins=[history])
 	factory = client.type_factory('ns0')
-	macs = [devicename] #'*' for all
+	deviceArr = [devicename] #'*' for all
 	item=[]
 
-	for mac in macs:
-		item.append(factory.SelectItem(Item=mac))
+	for names in deviceArr:
+		item.append(factory.SelectItem(Item=names))
 
 	Item = factory.ArrayOfSelectItem(item)
 	stateInfo = ''
 
 	criteria = factory.CmSelectionCriteria(
 		MaxReturnedDevices = 1000,
-		DeviceClass='Phone',
+		DeviceClass='Any', #The device class to query for real-time status. Device classes include: Any, Phone, Gateway, H323, Cti, VoiceMail, MediaResources, HuntList, SIPTrunk, Unknown
 		Model=255,    #255 for all
 		Status='Any', #Allows device searches by status (or state): Any,Registered,UnRegistered, Rejected,PartiallyRegistered,Unknown
 		NodeName='',
@@ -80,8 +80,8 @@ def get_risport(username,password,hostname,devicename):
 		DownloadStatus='Any'
 	)
 
-	# Empty array to hold results
-	phone_array = []
+	timeStampCheck = 0
+	status = ''
 
 	result = client.service.selectCmDevice(stateInfo, criteria)
 	if result['SelectCmDeviceResult']['TotalDevicesFound'] == 0:
@@ -97,12 +97,14 @@ def get_risport(username,password,hostname,devicename):
 						'status':device['Status'],
 						'description':device['Description'],
 						'ipaddress':device['IPAddress']['item'][0]['IP'],
-						}
-					phone_array.append(data)
-	
-#	print(phone_array[0]['status'])
+						'timestamp':device['TimeStamp'],
+						'deviceclass':device['DeviceClass']
+					}
+					if (device['TimeStamp'] >= timeStampCheck):
+						timeStampCheck = device['TimeStamp']
+						status = device['Status']
 
-	return phone_array[0]['status'].strip()
+	return status
 	
 # define command line options and validate data.  Show usage or provide info on required options
 def command_line_validate(argv):
