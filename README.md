@@ -38,7 +38,7 @@ General Public Licence (see http://www.fsf.org/licensing/licenses/gpl.txt).
 	
 # notes
 	For SIP Trunk Status:
-	Registered = Full Service
-	Unregistered = Partial Service
-	Unknown = No Service
+		Registered = Full Service
+		Unregistered = Partial Service
+		Unknown = No Service
 
