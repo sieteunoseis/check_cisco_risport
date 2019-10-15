@@ -30,9 +30,15 @@ General Public Licence (see http://www.fsf.org/licensing/licenses/gpl.txt).
   -u="": AXL usernanme
   -p="": AXL password
   -d="": Device name that you want to check registration status of
-  -w="": Warninig level (1 - 
+  -w="": Warninig level (1 - Registered, 2 - UnRegistered, 3 - Rejected, 4 - PartiallyRegistered, 5 - Unknown, 6 - NotFound)
   -c="": Critical level
   
 # example
 	./check_cisco_risport.py -H 10.10.10.1 -u username -p password -d SEP112233445566 -w 2 -c 5
+	
+# notes
+	For SIP Trunk Status:
+	Registered = Full Service
+	Unregistered = Partial Service
+	Unknown = No Service
 
