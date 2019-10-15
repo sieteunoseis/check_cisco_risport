@@ -3,7 +3,7 @@ check_cisco_risport is a Nagios plugin to monitor the registration status of Cis
 
 
 file: check_cisco_risport.py
-Version 0.1.0 (10.15.2019)
+Version 0.1.1 (10.15.2019)
 
 check_cisco_risport is a Nagios plugin made by Jeremy Worden (jeremy.worden at gmail dot come)
 to monitor the registration status of Cisco Unified Communications Servers devices.
@@ -23,14 +23,14 @@ General Public Licence (see http://www.fsf.org/licensing/licenses/gpl.txt).
  		https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cucm/devguide/9_1_1/xmldev-911.html
 
 # changelog:
-		Version 0.1 (10.15.2019) initial release
+		Version 0.1.1 (10.15.2019) initial release
     
 # Usage
   -H="": AXL server IP address
   -u="": AXL usernanme
   -p="": AXL password
   -d="": Device name that you want to check registration status of
-  -w="": Warninig level
+  -w="": Warninig level (1 - 
   -c="": Critical level
   
 # example
