@@ -83,28 +83,34 @@ def get_risport(username,password,hostname,devicename):
 	timeStampCheck = 0
 	status = ''
 
-	result = client.service.selectCmDevice(stateInfo, criteria)
-	if result['SelectCmDeviceResult']['TotalDevicesFound'] == 0:
-		#		print (result['SelectCmDeviceResult']['TotalDevicesFound'])
-		status = 'Not Found'
-	else:
-		for node in result['SelectCmDeviceResult']['CmNodes']['item']:
-			if node['CmDevices'] != None:
-				for device in node['CmDevices']['item']:
-					data = {
-						'name':device['Name'],
-						'directory':device['DirNumber'],
-						'status':device['Status'],
-						'description':device['Description'],
-						'ipaddress':device['IPAddress']['item'][0]['IP'],
-						'timestamp':device['TimeStamp'],
-						'deviceclass':device['DeviceClass']
-					}
-					if (device['TimeStamp'] >= timeStampCheck):
-						timeStampCheck = device['TimeStamp']
-						status = device['Status']
+	try:
+		result = client.service.selectCmDevice(stateInfo, criteria)
+		
+		if result['SelectCmDeviceResult']['TotalDevicesFound'] == 0:
+			print ('***devicename not found***')
+			sys.exit(UNKNOWN)
+		else:
+			for node in result['SelectCmDeviceResult']['CmNodes']['item']:
+				if node['CmDevices'] != None:
+					for device in node['CmDevices']['item']:
+						data = {
+							'name':device['Name'],
+							'directory':device['DirNumber'],
+							'status':device['Status'],
+							'description':device['Description'],
+							'ipaddress':device['IPAddress']['item'][0]['IP'],
+							'timestamp':device['TimeStamp'],
+							'deviceclass':device['DeviceClass']
+						}
+						if (device['TimeStamp'] >= timeStampCheck):
+							timeStampCheck = device['TimeStamp']
+							status = device['Status']
 
-	return status
+		return status
+	except Exception as e:
+		# If error exit with UNKNOWN
+		print(e)
+		sys.exit(UNKNOWN)
 	
 # define command line options and validate data.  Show usage or provide info on required options
 def command_line_validate(argv):
@@ -227,7 +233,7 @@ def main():
 #	print(argv)
 	hostname,username,password,devicename,warn,crit = command_line_validate(argv)
 	status = get_risport(username,password,hostname,devicename)
-#  print perf_data
+#   print perf_data
 	result = status_check(devicename, status, warn, crit)
 	if result == None:
 		matchCriticalLevel = next(d for d in levels if d['value'] == crit)
